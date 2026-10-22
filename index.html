@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rethink Marketing Halloween Theme Vote</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%83%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fff7ee; --surface: #ffffff; --surface-2: #fff0df; --text: #2a1a12; --muted: #7a5f50;
+  --border: #f0d9c3; --accent: #e8620c; --accent-text: #ffffff; --accent-soft: #ffe3cc;
+  --purple: #6b3fa0; --gold: #c98a00; --ok: #2e7d4f; --err: #b3261e; --bar-bg: #f6e7d6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15101c; --surface: #211a2c; --surface-2: #2a2138; --text: #f5ece3; --muted: #b8a6c4;
+    --border: #3a2d4d; --accent: #ff8a2b; --accent-text: #1a0f05; --accent-soft: #3d2a1a;
+    --purple: #b48cf0; --gold: #ffc247; --ok: #6fd39a; --err: #ff8f87; --bar-bg: #2f2540;
+  }
+}
+* { box-sizing: border-box; }
+html { color-scheme: light dark; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font-family: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.5; min-height: 100vh;
+}
+.wrap { max-width: 720px; margin: 0 auto; padding: 28px 18px 56px; }
+header { text-align: center; margin-bottom: 24px; }
+.emoji-row { font-size: 34px; letter-spacing: 6px; }
+h1 {
+  font-family: "Creepster", "Chalkduster", "Marker Felt", Impact, fantasy; font-weight: 400;
+  font-size: clamp(34px, 8vw, 52px); letter-spacing: 1.5px; margin: 4px 0 6px; color: var(--accent);
+}
+.sub { color: var(--muted); margin: 0; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 18px; }
+h2 { font-size: 18px; margin: 0 0 12px; }
+label.field { display: block; font-weight: 800; font-size: 14px; margin-bottom: 6px; }
+input[type="text"] {
+  width: 100%; font: inherit; padding: 12px 14px; border-radius: 10px;
+  border: 2px solid var(--border); background: var(--bg); color: var(--text);
+}
+input[type="text"]:focus-visible, .opt:focus-visible, button.primary:focus-visible { outline: 3px solid var(--purple); outline-offset: 2px; }
+input[type="text"]:focus { border-color: var(--accent); }
+.options { display: grid; gap: 10px; margin: 18px 0 14px; }
+.opt {
+  display: flex; gap: 14px; align-items: center; text-align: left; width: 100%;
+  padding: 14px 16px; border-radius: 12px; border: 2px solid var(--border);
+  background: var(--surface-2); color: var(--text); font: inherit; cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.opt:hover { border-color: var(--accent); }
+.opt.selected { border-color: var(--accent); background: var(--accent-soft); }
+.opt .ico { font-size: 30px; flex: none; }
+.opt .t { font-weight: 800; display: block; }
+.opt .d { color: var(--muted); font-size: 13.5px; display: block; }
+.opt .check {
+  margin-left: auto; flex: none; width: 24px; height: 24px; border-radius: 50%;
+  border: 2px solid var(--border); display: grid; place-items: center; font-size: 14px; color: transparent;
+}
+.opt.selected .check { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+button.primary {
+  width: 100%; font: inherit; font-weight: 800; font-size: 16px; padding: 14px; border: none;
+  border-radius: 12px; background: var(--accent); color: var(--accent-text); cursor: pointer;
+}
+button.primary:disabled { opacity: .45; cursor: not-allowed; }
+.msg { margin-top: 10px; font-size: 14px; min-height: 20px; }
+.msg.ok { color: var(--ok); font-weight: 700; }
+.msg.err { color: var(--err); font-weight: 700; }
+.banner {
+  background: var(--accent-soft); border: 1px dashed var(--accent); border-radius: 12px;
+  padding: 12px 14px; margin-bottom: 18px; font-size: 14px;
+}
+.lb-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.total { color: var(--muted); font-size: 14px; }
+.row { padding: 12px 0; border-top: 1px solid var(--border); }
+.row:first-of-type { border-top: none; }
+.row-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.rank { font-weight: 800; width: 28px; text-align: center; font-size: 20px; }
+.row-name { font-weight: 800; flex: 1; }
+.row-count { font-weight: 800; }
+.row-pct { color: var(--muted); font-size: 13px; width: 44px; text-align: right; }
+.bar { height: 14px; background: var(--bar-bg); border-radius: 99px; overflow: hidden; }
+.fill { height: 100%; border-radius: 99px; background: var(--accent); transition: width .5s ease; }
+.row.leader .fill { background: linear-gradient(90deg, var(--accent), var(--gold)); }
+.voters { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 12.5px; padding: 3px 10px; border-radius: 99px; background: var(--accent-soft); }
+.chip.me { outline: 2px solid var(--purple); }
+.empty { color: var(--muted); text-align: center; padding: 14px 0 4px; }
+.note { color: var(--muted); font-size: 13px; text-align: center; }
+@media (prefers-reduced-motion: reduce) { .fill { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="emoji-row" aria-hidden="true">🎃 👻 🦇</div>
+    <h1>Halloween Theme Vote</h1>
+    <p class="sub">Rethink Marketing team: pick how we’re showing up this year.</p>
+  </header>
+
+  <div class="banner" id="banner" hidden>
+    <strong>Preview mode.</strong> Votes aren’t being saved to a spreadsheet yet. Paste your Google Apps Script web app URL into <code>ENDPOINT</code> at the top of this file’s script to go live.
+  </div>
+
+  <section class="card">
+    <h2>Cast your vote</h2>
+    <label class="field" for="nameInput">Your name</label>
+    <input type="text" id="nameInput" maxlength="60" placeholder="First and last name" autocomplete="name">
+    <div class="options" id="options" role="radiogroup" aria-label="Halloween theme"></div>
+    <button class="primary" id="submitBtn" disabled>Save my vote</button>
+    <div class="msg" id="msg" aria-live="polite"></div>
+  </section>
+
+  <section class="card">
+    <div class="lb-head">
+      <h2>🏆 Leaderboard</h2>
+      <span class="total" id="total">0 votes</span>
+    </div>
+    <div id="board"><div class="empty">Loading votes…</div></div>
+  </section>
+
+  <p class="note">One vote per name. Vote again with the same name to change your pick.</p>
+</div>
+
+<script>
+// ====== CONFIGURATION ======
+// Paste the web app URL from Google Apps Script (Deploy > New deployment > Web app).
+var ENDPOINT = "PASTE_WEB_APP_URL_HERE";
+// Set to false to show only totals on the leaderboard (hides voter names).
+var SHOW_NAMES = true;
+// How often the leaderboard refreshes, in seconds.
+var REFRESH_SECONDS = 15;
+// ===========================
+
+(function () {
+  var THEMES = [
+    { id: "music", icon: "🎸", title: "Music Genre", desc: "Everyone picks a genre and dresses the part: punk, disco, country, and so on." },
+    { id: "icon",  icon: "🎭", title: "Artist or Movie Character", desc: "Come as a favorite musician, film hero, or villain." },
+    { id: "solo",  icon: "🧙", title: "Flying Solo", desc: "aka “I’ll channel my own creativity.” No group theme, do your own thing." }
+  ];
+
+  var live = ENDPOINT && ENDPOINT.indexOf("http") === 0;
+  var selected = null, votes = [], myName = "";
+
+  var elOptions = document.getElementById("options");
+  var elName = document.getElementById("nameInput");
+  var elSubmit = document.getElementById("submitBtn");
+  var elMsg = document.getElementById("msg");
+  var elBoard = document.getElementById("board");
+  var elTotal = document.getElementById("total");
+  document.getElementById("banner").hidden = live;
+
+  try { myName = localStorage.getItem("hw_name") || ""; elName.value = myName; } catch (e) {}
+
+  function setMsg(t, k) { elMsg.textContent = t || ""; elMsg.className = "msg" + (k ? " " + k : ""); }
+  function norm(s) { return String(s || "").trim().toLowerCase(); }
+  function updateSubmit() { elSubmit.disabled = !(selected && elName.value.trim()); }
+
+  function renderOptions() {
+    elOptions.textContent = "";
+    THEMES.forEach(function (t) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "opt" + (selected === t.id ? " selected" : "");
+      b.setAttribute("role", "radio");
+      b.setAttribute("aria-checked", selected === t.id ? "true" : "false");
+      var ico = document.createElement("span"); ico.className = "ico"; ico.textContent = t.icon;
+      var w = document.createElement("span");
+      var tt = document.createElement("span"); tt.className = "t"; tt.textContent = t.title;
+      var dd = document.createElement("span"); dd.className = "d"; dd.textContent = t.desc;
+      w.appendChild(tt); w.appendChild(dd);
+      var c = document.createElement("span"); c.className = "check"; c.textContent = "✓";
+      b.appendChild(ico); b.appendChild(w); b.appendChild(c);
+      b.addEventListener("click", function () { selected = t.id; renderOptions(); updateSubmit(); });
+      elOptions.appendChild(b);
+    });
+  }
+
+  function renderBoard() {
+    elBoard.textContent = "";
+    var total = votes.length;
+    elTotal.textContent = total + (total === 1 ? " vote" : " votes");
+    if (!total) {
+      var e = document.createElement("div"); e.className = "empty";
+      e.textContent = "No votes yet. Be the first to vote.";
+      elBoard.appendChild(e); return;
+    }
+    var groups = THEMES.map(function (t) {
+      return { theme: t, voters: votes.filter(function (v) { return v.choice === t.id; })
+        .sort(function (a, b) { return a.name.localeCompare(b.name); }) };
+    });
+    groups.sort(function (a, b) {
+      return b.voters.length - a.voters.length || THEMES.indexOf(a.theme) - THEMES.indexOf(b.theme);
+    });
+    var top = groups[0].voters.length, medals = ["🥇", "🥈", "🥉"];
+    groups.forEach(function (g, i) {
+      var n = g.voters.length, pct = Math.round((n / total) * 100), isLeader = n > 0 && n === top;
+      var row = document.createElement("div"); row.className = "row" + (isLeader ? " leader" : "");
+      var tr = document.createElement("div"); tr.className = "row-top";
+      var rk = document.createElement("span"); rk.className = "rank";
+      rk.textContent = n === 0 ? "·" : (isLeader ? "🥇" : medals[i] || String(i + 1));
+      var nm = document.createElement("span"); nm.className = "row-name"; nm.textContent = g.theme.icon + "  " + g.theme.title;
+      var ct = document.createElement("span"); ct.className = "row-count"; ct.textContent = String(n);
+      var pc = document.createElement("span"); pc.className = "row-pct"; pc.textContent = pct + "%";
+      tr.appendChild(rk); tr.appendChild(nm); tr.appendChild(ct); tr.appendChild(pc);
+      var bar = document.createElement("div"); bar.className = "bar";
+      var f = document.createElement("div"); f.className = "fill"; f.style.width = pct + "%";
+      bar.appendChild(f);
+      row.appendChild(tr); row.appendChild(bar);
+      if (n && SHOW_NAMES) {
+        var vw = document.createElement("div"); vw.className = "voters";
+        g.voters.forEach(function (v) {
+          var c = document.createElement("span");
+          c.className = "chip" + (norm(v.name) === norm(myName) ? " me" : "");
+          c.textContent = v.name; vw.appendChild(c);
+        });
+        row.appendChild(vw);
+      }
+      elBoard.appendChild(row);
+    });
+  }
+
+  function setVotes(list) {
+    votes = (list || []).filter(function (v) {
+      return v && v.name && THEMES.some(function (t) { return t.id === v.choice; });
+    }).map(function (v) { return { name: String(v.name), choice: v.choice }; });
+    renderBoard();
+    var mine = votes.filter(function (v) { return norm(v.name) === norm(myName); })[0];
+    if (mine && !selected) { selected = mine.choice; renderOptions(); updateSubmit(); }
+  }
+
+  function load() {
+    if (!live) return;
+    fetch(ENDPOINT, { method: "GET" })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { if (d && d.ok) setVotes(d.votes); })
+      .catch(function () {
+        if (!votes.length) {
+          elBoard.textContent = "";
+          var e = document.createElement("div"); e.className = "empty";
+          e.textContent = "Couldn’t load the leaderboard. Check your connection and refresh.";
+          elBoard.appendChild(e);
+        }
+      });
+  }
+
+  elName.addEventListener("input", updateSubmit);
+
+  elSubmit.addEventListener("click", function () {
+    var name = elName.value.trim().slice(0, 60);
+    if (!name || !selected) return;
+    myName = name;
+    try { localStorage.setItem("hw_name", name); } catch (e) {}
+    elSubmit.disabled = true;
+    setMsg("Saving your vote…");
+
+    var theme = THEMES.filter(function (t) { return t.id === selected; })[0];
+    function done() { setMsg("Vote saved for " + theme.title + ". Thanks, " + name + "!", "ok"); updateSubmit(); }
+
+    if (!live) {
+      votes = votes.filter(function (v) { return norm(v.name) !== norm(name); });
+      votes.push({ name: name, choice: selected });
+      setVotes(votes); done(); return;
+    }
+
+    // text/plain avoids a CORS preflight, which Apps Script doesn't support.
+    fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ name: name, choice: selected })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d && d.ok) { setVotes(d.votes); done(); }
+        else { setMsg((d && d.error) || "The vote wasn’t saved. Try again.", "err"); updateSubmit(); }
+      })
+      .catch(function () {
+        setMsg("Couldn’t reach the spreadsheet. Check your connection and try again.", "err");
+        updateSubmit();
+      });
+  });
+
+  renderOptions(); updateSubmit();
+  if (live) { load(); setInterval(load, REFRESH_SECONDS * 1000); }
+  else { renderBoard(); }
+})();
+</script>
+</body>
+</html>
